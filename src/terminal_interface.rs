@@ -45,7 +45,7 @@ impl TerminalInterface {
                 .split(size);
 
             // Render time
-            let time_text = format!("Hour: {}", simulation_time.hour);
+            let time_text = format!("Day: {}, Hour: {}", simulation_time.day, simulation_time.hour);
             let time_paragraph = Paragraph::new(time_text)
                 .block(Block::default().title("Time").borders(Borders::ALL));
             f.render_widget(time_paragraph, chunks[0]);

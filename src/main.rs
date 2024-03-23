@@ -21,3 +21,5 @@ fn update(terrain: &mut TerrainGrid, simulation_time: &mut SimulationTime) {
     simulation_time.advance();
     terrain.update_temperature(simulation_time.hour);
 }
+
+
