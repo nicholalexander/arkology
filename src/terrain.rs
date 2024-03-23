@@ -3,15 +3,15 @@
 
 #[derive(Clone)]
 pub struct TerrainTile {
-  elevation: u32,
-  temperature: f32,
+  pub elevation: u32,
+  pub temperature: f32,
   // Add more properties like moisture, vegetation type, etc.
 }
 
 pub struct TerrainGrid {
-  width: usize,
-  height: usize,
-  tiles: Vec<Vec<TerrainTile>>,
+  pub width: usize,
+  pub height: usize,
+  pub tiles: Vec<Vec<TerrainTile>>,
 }
 
 impl TerrainGrid {
