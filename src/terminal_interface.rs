@@ -1,5 +1,4 @@
-// src/terminal_interface.rs
-
+// Temporary Terminal Interface for Quick Debugging
 use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
@@ -9,7 +8,7 @@ use tui::{
     backend::CrosstermBackend,
     layout::{Constraint, Direction, Layout},
     widgets::{Block, Borders, Paragraph, Row, Table},
-    Frame, Terminal,
+    Terminal,
 };
 
 use crate::simulation_time::SimulationTime;
@@ -29,7 +28,11 @@ impl TerminalInterface {
         Ok(Self { terminal })
     }
 
-    pub fn render(&mut self, terrain: &TerrainGrid, simulation_time: &SimulationTime) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn render(
+        &mut self,
+        terrain: &TerrainGrid,
+        simulation_time: &SimulationTime,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         self.terminal.draw(|f| {
             let size = f.size();
             let chunks = Layout::default()
@@ -37,7 +40,7 @@ impl TerminalInterface {
                 .margin(1)
                 .constraints([
                     Constraint::Length(3), // Space for the time display
-                    Constraint::Min(0), // Remaining space for the terrain grid
+                    Constraint::Min(0),    // Remaining space for the terrain grid
                 ])
                 .split(size);
 
@@ -48,8 +51,9 @@ impl TerminalInterface {
             f.render_widget(time_paragraph, chunks[0]);
 
             // Render terrain grid
-            let rows = terrain.tiles.iter().map(|row| {
-                let row_text: Vec<String> = row.iter()
+            let rows = terrain.tiles.iter().map(|row: &Vec<TerrainTile>| {
+                let row_text: Vec<String> = row
+                    .iter()
                     .map(|tile| format!("{:.1}", tile.temperature))
                     .collect();
                 Row::new(row_text)
@@ -68,10 +72,6 @@ impl TerminalInterface {
 impl Drop for TerminalInterface {
     fn drop(&mut self) {
         disable_raw_mode().unwrap();
-        execute!(
-            self.terminal.backend_mut(),
-            LeaveAlternateScreen
-        )
-        .unwrap();
+        execute!(self.terminal.backend_mut(), LeaveAlternateScreen).unwrap();
     }
 }

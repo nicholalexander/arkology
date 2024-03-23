@@ -1,10 +1,10 @@
-mod terrain;
 mod simulation_time;
 mod terminal_interface;
+mod terrain;
 
-use terrain::TerrainGrid;
 use simulation_time::SimulationTime;
 use terminal_interface::TerminalInterface;
+use terrain::TerrainGrid;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut terrain = TerrainGrid::new(10, 10);
