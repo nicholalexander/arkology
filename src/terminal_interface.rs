@@ -12,7 +12,8 @@ use tui::{
 };
 
 use crate::simulation_time::SimulationTime;
-use crate::terrain::{TerrainGrid, TerrainTile};
+use crate::world::terrain::{TerrainGrid, TerrainTile};
+use crate::world::flowers::Goldenrod;
 
 pub struct TerminalInterface {
     terminal: Terminal<CrosstermBackend<Stdout>>,
@@ -32,6 +33,7 @@ impl TerminalInterface {
         &mut self,
         terrain: &TerrainGrid,
         simulation_time: &SimulationTime,
+        goldenrod: &Goldenrod,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.terminal.draw(|f| {
             let size = f.size();
@@ -67,6 +69,15 @@ impl TerminalInterface {
                 .widths(&[Constraint::Percentage(10); 10]); // Assuming a fixed-size grid for simplicity
 
             f.render_widget(table, chunks[1]);
+
+            // render flowers
+            let flower_text = format!(
+                "Nectar: {}",
+                goldenrod.nectar
+            );
+            let flower_paragraph = Paragraph::new(flower_text)
+                .block(Block::default().title("Goldenrod").borders(Borders::ALL));
+            f.render_widget(flower_paragraph, chunks[0]);
         })?;
         Ok(())
     }
