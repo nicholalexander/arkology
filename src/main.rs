@@ -6,7 +6,8 @@ use crossterm::event::{self, Event, KeyCode};
 use simulation_time::SimulationTime;
 use terminal_interface::TerminalInterface;
 use crate::world::terrain::TerrainGrid; // If you need to access TerrainGrid directly
-use world::flowers::Goldenrod;
+use world::flowers::*;
+
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut terrain = TerrainGrid::new(10, 10);

@@ -1,20 +1,20 @@
 use super::Flower;
 
 #[derive(Clone)]
-pub struct Goldenrod {
+pub struct Chrysanthemum {
     pub nectar: u32,
 }
 
-impl Goldenrod {
+impl Chrysanthemum {
     pub fn new(nectar: u32) -> Self {
         Self { nectar }
     }
 }
 
-impl Flower for Goldenrod {
+impl Flower for Chrysanthemum {
     fn update_nectar(&mut self) {
         if self.nectar < 100 {
-            self.nectar += 2;
+            self.nectar += 1;
         }
     }
 }
