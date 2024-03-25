@@ -17,4 +17,8 @@ impl Flower for Chrysanthemum {
             self.nectar += 1;
         }
     }
+
+    fn nectar_count(&self) -> u32 {
+      self.nectar
+  }
 }

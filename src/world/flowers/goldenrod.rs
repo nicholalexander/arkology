@@ -17,4 +17,8 @@ impl Flower for Goldenrod {
             self.nectar += 2;
         }
     }
+
+    fn nectar_count(&self) -> u32 {
+      self.nectar
+  }
 }

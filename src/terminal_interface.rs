@@ -13,7 +13,7 @@ use tui::{
 
 use crate::simulation_time::SimulationTime;
 use crate::world::terrain::{TerrainGrid, TerrainTile};
-use crate::world::flowers::Goldenrod;
+use crate::world::flowers::*;
 
 pub struct TerminalInterface {
     terminal: Terminal<CrosstermBackend<Stdout>>,
@@ -33,16 +33,19 @@ impl TerminalInterface {
         &mut self,
         terrain: &TerrainGrid,
         simulation_time: &SimulationTime,
-        goldenrod: &Goldenrod,
+        flowers: &Vec<Box<dyn Flower>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.terminal.draw(|f| {
             let size = f.size();
+
+
             let chunks = Layout::default()
                 .direction(Direction::Vertical)
                 .margin(1)
                 .constraints([
                     Constraint::Length(3), // Space for the time display
-                    Constraint::Min(0),    // Remaining space for the terrain grid
+                    Constraint::Percentage(50), // Half the remaining space for the terrain grid
+                    Constraint::Percentage(50), // Half for the flower table
                 ])
                 .split(size);
 
@@ -70,14 +73,23 @@ impl TerminalInterface {
 
             f.render_widget(table, chunks[1]);
 
-            // render flowers
-            let flower_text = format!(
-                "Nectar: {}",
-                goldenrod.nectar
-            );
-            let flower_paragraph = Paragraph::new(flower_text)
-                .block(Block::default().title("Goldenrod").borders(Borders::ALL));
-            f.render_widget(flower_paragraph, chunks[0]);
+            // Assuming you're inside a rendering function or method
+            let flower_rows = flowers.iter().map(|flower| {
+                let nectar = flower.nectar_count();
+                // For simplicity, assuming a direct conversion to String, adjust formatting as needed
+                let flower_text = format!("Nectar: {}", nectar);
+                Row::new(vec![flower_text])
+            });
+
+            let flower_table = Table::new(flower_rows)
+                .block(Block::default().title("Flower Nectar Counts").borders(Borders::ALL))
+                // Adjust the width or other constraints as needed for your layout
+                .widths(&[Constraint::Percentage(100)]);
+
+            // Determine where to place this in your layout, adjusting as needed
+            f.render_widget(flower_table, chunks[2]); // This should now correctly refer to the flower table's layout section
+
+
         })?;
         Ok(())
     }
