@@ -19,17 +19,12 @@ impl TerrainGrid {
         }
     }
 
-    pub fn update_temperature(&mut self, time: &SimulationTime) {
-        let base_temperature_change = match time.hour {
-            6..=17 => 2.0, // Temperature rises during the day
-            _ => -2.0,     // Temperature falls at night
-        };
-
-        let seasonal_modifier = time.month.temperature_modifier();
+    pub fn update_temperature(&mut self, time: &mut SimulationTime) {
+        let temperature = time.calculate_hourly_temperature();
 
         for row in self.tiles.iter_mut() {
             for tile in row {
-                tile.temperature += base_temperature_change + seasonal_modifier;
+                tile.temperature = temperature;
             }
         }
     }

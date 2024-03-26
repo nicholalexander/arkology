@@ -13,14 +13,14 @@ pub enum Month {
     December,
 }
 
-impl Month {
-    pub fn temperature_modifier(&self) -> f32 {
-        match self {
-            Month::December | Month::January | Month::February => -5.0, // Colder months
-            Month::June | Month::July | Month::August => 5.0,           // Warmer months
-            _ => 0.0, // Neutral or mild temperature months
-        }
-    }
+use std::f32::consts::PI;
+
+// Define the Season enum for clarity in seasonal calculations
+enum Season {
+    Winter,
+    Spring,
+    Summer,
+    Autumn,
 }
 
 use std::fmt;
@@ -112,5 +112,53 @@ impl SimulationTime {
                 Month::January
             }
         };
+    }
+
+    pub fn calculate_hourly_temperature(&mut self) -> f32 {
+        let day_of_year = self.day + match self.month {
+            Month::January => 0,
+            Month::February => 31,
+            Month::March => 59,
+            Month::April => 90,
+            Month::May => 120,
+            Month::June => 151,
+            Month::July => 181,
+            Month::August => 212,
+            Month::September => 243,
+            Month::October => 273,
+            Month::November => 304,
+            Month::December => 334,
+        };
+
+        let hour = self.hour;
+
+        let (amplitude, baseline, midday_peak) = Self::get_seasonal_parameters(day_of_year);
+
+        // Daily temperature variation modeled with a sine wave
+        let daily_variation = amplitude * (PI / 12.0 * (hour as f32 - 3.0)).sin();
+
+        // Additional adjustment for midday peak temperature
+        let midday_adjustment = midday_peak * (PI / 12.0 * (hour as f32 - 15.0)).sin();
+
+        // Combine the components
+        let temperature = daily_variation + baseline + midday_adjustment;
+
+        temperature
+    }
+
+    fn get_seasonal_parameters(day_of_year: u32) -> (f32, f32, f32) {
+        let season = match day_of_year {
+            59..=151 => Season::Spring,
+            152..=243 => Season::Summer,
+            244..=334 => Season::Autumn,
+            _ => Season::Winter,
+        };
+
+        match season {
+            Season::Winter => (5.0, 0.0, 0.0), // Lower amplitude, colder baseline, minimal midday peak
+            Season::Spring => (10.0, 10.0, 5.0), // Increasing amplitude and baseline with moderate midday peak
+            Season::Summer => (15.0, 20.0, 10.0), // Higher amplitude for larger temperature swings, warmer baseline, significant midday peak
+            Season::Autumn => (10.0, 15.0, 5.0), // Decreasing amplitude and baseline with moderate midday peak
+        }
     }
 }
