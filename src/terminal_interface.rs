@@ -50,8 +50,11 @@ impl TerminalInterface {
 
             // Render time
             let time_text = format!(
-                "Day: {}, Hour: {}",
-                simulation_time.day, simulation_time.hour
+                "Day: {}, Hour: {}, Month: {}, Year: {}",
+                simulation_time.day,
+                simulation_time.hour,
+                simulation_time.month,
+                simulation_time.year
             );
             let time_paragraph = Paragraph::new(time_text)
                 .block(Block::default().title("Time").borders(Borders::ALL));
