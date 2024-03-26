@@ -12,24 +12,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut terrain = TerrainGrid::new(10, 10);
     let mut simulation_time = SimulationTime::new();
     let mut terminal_interface = TerminalInterface::new()?;
-
-    let mut flowers: Vec<Box<dyn Flower>> = Vec::new();
-
-    // Add 5 Goldenrods
-    for _ in 0..5 {
-        flowers.push(Box::new(Goldenrod::new(0, 0, 0)));
-    }
-
-    // Add 5 Chrysanthemums
-    for _ in 0..5 {
-        flowers.push(Box::new(Chrysanthemum::new(0, 0, 1)));
-    }
+    let mut flowers = Flowers::build();
 
     loop {
         update(&mut terrain, &mut simulation_time, &mut flowers);
         terminal_interface.render(&terrain, &simulation_time, &flowers)?;
 
-        if event::poll(std::time::Duration::from_millis(1000))? {
+        if event::poll(std::time::Duration::from_millis(100))? {
             if let Event::Key(key_event) = event::read()? {
                 if key_event.code == KeyCode::Char('c')
                     && key_event
