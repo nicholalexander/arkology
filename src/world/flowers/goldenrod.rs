@@ -14,8 +14,8 @@ impl Goldenrod {
 }
 
 impl Flower for Goldenrod {
-    fn update_nectar(&mut self) {
-        if self.nectar < 100 {
+    fn update_nectar(&mut self, temperature: f32) {
+        if temperature > 20.0 && self.nectar < 100 {
             self.nectar += 2;
         }
     }

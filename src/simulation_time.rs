@@ -60,7 +60,7 @@ impl SimulationTime {
         Self {
             hour: 0,
             day: 1,
-            month: Month::January,
+            month: Month::March,
             year: 10191,
         }
     }

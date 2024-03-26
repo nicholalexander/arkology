@@ -28,4 +28,8 @@ impl TerrainGrid {
             }
         }
     }
+
+    pub fn get_tile(&self, x: usize, y: usize) -> Option<&TerrainTile> {
+        self.tiles.get(y)?.get(x)
+    }
 }

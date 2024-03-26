@@ -42,7 +42,14 @@ fn update(
     simulation_time.advance();
     terrain.update_temperature(simulation_time);
 
+    update_flowers_nectar(flowers, terrain);
+}
+
+fn update_flowers_nectar(flowers: &mut Vec<Box<dyn Flower>>, terrain_grid: &TerrainGrid) {
     for flower in flowers.iter_mut() {
-        flower.update_nectar();
+        let (x, y) = flower.get_position();
+        if let Some(tile) = terrain_grid.get_tile(x, y) {
+            flower.update_nectar(tile.temperature);
+        }
     }
 }

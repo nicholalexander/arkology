@@ -14,8 +14,8 @@ impl Chrysanthemum {
 }
 
 impl Flower for Chrysanthemum {
-    fn update_nectar(&mut self) {
-        if self.nectar < 100 {
+    fn update_nectar(&mut self, temperature: f32) {
+        if temperature > 25.0 && self.nectar < 100 {
             self.nectar += 1;
         }
     }
