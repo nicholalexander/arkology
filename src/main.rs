@@ -18,7 +18,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         update(&mut terrain, &mut simulation_time, &mut flowers);
         terminal_interface.render(&terrain, &simulation_time, &flowers)?;
 
-        if event::poll(std::time::Duration::from_millis(10))? {
+        if event::poll(std::time::Duration::from_millis(100))? {
             if let Event::Key(key_event) = event::read()? {
                 if key_event.code == KeyCode::Char('c')
                     && key_event

@@ -115,32 +115,35 @@ impl SimulationTime {
     }
 
     pub fn calculate_hourly_temperature(&mut self) -> f32 {
-        let day_of_year = self.day + match self.month {
-            Month::January => 0,
-            Month::February => 31,
-            Month::March => 59,
-            Month::April => 90,
-            Month::May => 120,
-            Month::June => 151,
-            Month::July => 181,
-            Month::August => 212,
-            Month::September => 243,
-            Month::October => 273,
-            Month::November => 304,
-            Month::December => 334,
-        };
+        let day_of_year = self.day
+            + match self.month {
+                Month::January => 0,
+                Month::February => 31,
+                Month::March => 59,
+                Month::April => 90,
+                Month::May => 120,
+                Month::June => 151,
+                Month::July => 181,
+                Month::August => 212,
+                Month::September => 243,
+                Month::October => 273,
+                Month::November => 304,
+                Month::December => 334,
+            };
 
         let hour = self.hour;
 
         let (amplitude, baseline, midday_peak) = Self::get_seasonal_parameters(day_of_year);
 
-        // Daily temperature variation modeled with a sine wave
-        let daily_variation = amplitude * (PI / 12.0 * (hour as f32 - 3.0)).sin();
+        // Adjusting the sine wave to have its minimum around 6 AM and peak at 3 PM
+        // The sine wave is shifted to start its upward rise at 6 AM.
+        // (hour - 6) shifts the wave so 0 corresponds to 6 AM.
+        // Multiplying by (PI / 12) scales the period to fit a 24-hour cycle.
+        let daily_variation = amplitude * ((hour as f32 - 6.0) * (PI / 12.0)).sin();
 
-        // Additional adjustment for midday peak temperature
-        let midday_adjustment = midday_peak * (PI / 12.0 * (hour as f32 - 15.0)).sin();
+        // Midday adjustment remains the same, peaking at 3 PM, 9 hours after 6 AM.
+        let midday_adjustment = midday_peak * ((hour as f32 - 15.0) * (PI / 12.0)).sin();
 
-        // Combine the components
         let temperature = daily_variation + baseline + midday_adjustment;
 
         temperature
