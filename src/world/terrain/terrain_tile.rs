@@ -6,6 +6,9 @@ pub struct TerrainTile {
 
 impl TerrainTile {
     pub fn new(elevation: u32, temperature: f32) -> Self {
-        Self { elevation, temperature }
+        Self {
+            elevation,
+            temperature,
+        }
     }
 }

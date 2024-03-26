@@ -2,12 +2,11 @@ mod simulation_time;
 mod terminal_interface;
 mod world;
 
+use crate::world::terrain::TerrainGrid; // If you need to access TerrainGrid directly
 use crossterm::event::{self, Event, KeyCode};
 use simulation_time::SimulationTime;
 use terminal_interface::TerminalInterface;
-use crate::world::terrain::TerrainGrid; // If you need to access TerrainGrid directly
 use world::flowers::*;
-
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut terrain = TerrainGrid::new(10, 10);
@@ -18,12 +17,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Add 5 Goldenrods
     for _ in 0..5 {
-        flowers.push(Box::new(Goldenrod::new(0)));
+        flowers.push(Box::new(Goldenrod::new(0, 0, 0)));
     }
 
     // Add 5 Chrysanthemums
     for _ in 0..5 {
-        flowers.push(Box::new(Chrysanthemum::new(0)));
+        flowers.push(Box::new(Chrysanthemum::new(0, 0, 1)));
     }
 
     loop {
@@ -46,7 +45,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn update(terrain: &mut TerrainGrid, simulation_time: &mut SimulationTime, flowers: &mut Vec<Box<dyn Flower>>) {
+fn update(
+    terrain: &mut TerrainGrid,
+    simulation_time: &mut SimulationTime,
+    flowers: &mut Vec<Box<dyn Flower>>,
+) {
     simulation_time.advance();
     terrain.update_temperature(simulation_time.hour);
 

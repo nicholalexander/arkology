@@ -12,8 +12,8 @@ use tui::{
 };
 
 use crate::simulation_time::SimulationTime;
-use crate::world::terrain::{TerrainGrid, TerrainTile};
 use crate::world::flowers::*;
+use crate::world::terrain::{TerrainGrid, TerrainTile};
 
 pub struct TerminalInterface {
     terminal: Terminal<CrosstermBackend<Stdout>>,
@@ -38,12 +38,11 @@ impl TerminalInterface {
         self.terminal.draw(|f| {
             let size = f.size();
 
-
             let chunks = Layout::default()
                 .direction(Direction::Vertical)
                 .margin(1)
                 .constraints([
-                    Constraint::Length(3), // Space for the time display
+                    Constraint::Length(3),      // Space for the time display
                     Constraint::Percentage(50), // Half the remaining space for the terrain grid
                     Constraint::Percentage(50), // Half for the flower table
                 ])
@@ -83,14 +82,16 @@ impl TerminalInterface {
             });
 
             let flower_table = Table::new(flower_rows)
-                .block(Block::default().title("Flower Nectar Counts").borders(Borders::ALL))
+                .block(
+                    Block::default()
+                        .title("Flower Nectar Counts")
+                        .borders(Borders::ALL),
+                )
                 // Adjust the width or other constraints as needed for your layout
                 .widths(&[Constraint::Percentage(100)]);
 
             // Determine where to place this in your layout, adjusting as needed
             f.render_widget(flower_table, chunks[2]); // This should now correctly refer to the flower table's layout section
-
-
         })?;
         Ok(())
     }
