@@ -27,6 +27,7 @@ impl Flower for Goldenrod {
     fn name(&self) -> &str {
         "Goldenrod"
     }
+
     fn get_position(&self) -> (usize, usize) {
         (self.x, self.y)
     }

@@ -135,14 +135,9 @@ impl SimulationTime {
 
         let (amplitude, baseline, midday_peak) = Self::get_seasonal_parameters(day_of_year);
 
-        // Adjusting the sine wave to have its minimum around 6 AM and peak at 3 PM
-        // The sine wave is shifted to start its upward rise at 6 AM.
-        // (hour - 6) shifts the wave so 0 corresponds to 6 AM.
-        // Multiplying by (PI / 12) scales the period to fit a 24-hour cycle.
-        let daily_variation = amplitude * ((hour as f32 - 6.0) * (PI / 12.0)).sin();
-
-        // Midday adjustment remains the same, peaking at 3 PM, 9 hours after 6 AM.
-        let midday_adjustment = midday_peak * ((hour as f32 - 15.0) * (PI / 12.0)).sin();
+        let adjusted_hour = hour as f32 + (19.0 % 24.0);
+        let daily_variation = amplitude * ((adjusted_hour * PI / 12.0) - PI / 2.0).sin();
+        let midday_adjustment = midday_peak * ((adjusted_hour * PI / 12.0) - PI / 2.0).sin();
 
         let temperature = daily_variation + baseline + midday_adjustment;
 
