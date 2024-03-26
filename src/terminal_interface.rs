@@ -76,8 +76,9 @@ impl TerminalInterface {
             let flower_rows = flowers.iter().map(|flower| {
                 let nectar = flower.nectar_count();
                 let name = flower.name();
+                let (x, y) = flower.get_position();
                 // For simplicity, assuming a direct conversion to String, adjust formatting as needed
-                let flower_text = format!("{}: {}", name, nectar); // Include the flower's name
+                let flower_text = format!("{}: {} | x: {} y: {}", name, nectar, x, y); // Include the flower's name
                 Row::new(vec![flower_text])
             });
 
