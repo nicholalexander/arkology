@@ -21,4 +21,10 @@ impl Flower for Chrysanthemum {
     fn nectar_count(&self) -> u32 {
       self.nectar
   }
+
+  fn name(&self) -> &str {
+    "Chrysanthemum"
+}
+
+
 }
