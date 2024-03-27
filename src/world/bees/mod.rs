@@ -48,7 +48,7 @@ impl Bees {
                 }
                 _ => {}
             }
-            bee.move_position(x, y);
+            bee.fly_to(x, y);
         }
     }
 }

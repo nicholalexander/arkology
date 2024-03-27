@@ -13,13 +13,14 @@ impl Bee {
         (self.x, self.y)
     }
 
-    pub fn move_position(&mut self, x: usize, y: usize) {
-        self.x = x;
-        self.y = y;
+    pub fn eat(&mut self) {
+        self.hunger -= 1;
     }
 
-    pub fn eat(&mut self, nectar: u32) {
-        self.hunger -= nectar;
+    pub fn fly_to(&mut self, x: usize, y: usize) {
+        self.x = x;
+        self.y = y;
+        self.hunger += 1;
     }
 
     pub fn hunger(&self) -> u32 {
