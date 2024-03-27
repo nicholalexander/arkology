@@ -12,6 +12,7 @@ pub trait Flower {
     fn flower_emoji(&self) -> &str {
         "🌼"
     }
+    fn give_nectar(&mut self) -> u32;
 }
 
 pub struct Flowers;

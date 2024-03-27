@@ -13,8 +13,8 @@ impl Bee {
         (self.x, self.y)
     }
 
-    pub fn eat(&mut self) {
-        self.hunger -= 1;
+    pub fn eat(&mut self, nectar_taken: u32) {
+        self.hunger -= nectar_taken;
     }
 
     pub fn fly_to(&mut self, x: usize, y: usize) {

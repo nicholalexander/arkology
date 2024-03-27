@@ -35,4 +35,13 @@ impl Flower for Goldenrod {
     fn flower_emoji(&self) -> &str {
         "🪻"
     }
+
+    fn give_nectar(&mut self) -> u32 {
+        if self.nectar > 0 {
+            self.nectar -= 1;
+            1
+        } else {
+            0
+        }
+    }
 }
