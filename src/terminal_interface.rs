@@ -128,27 +128,44 @@ impl TerminalInterface {
             // Assuming `f.render_widget` is part of your UI rendering logic
             f.render_widget(table, chunks[1]);
 
-            // Assuming you're inside a rendering function or method
-            let flower_rows = flowers.iter().map(|flower| {
+            // Assuming `flowers` and `bees` are both non-empty and have the same length for simplicity.
+            // If they're not the same length, you'll need to handle that, possibly by zipping the shorter iterator with a repeat of an empty string iterator.
+            let flower_texts = flowers.iter().map(|flower| {
                 let nectar = flower.nectar_count();
                 let name = flower.name();
                 let (x, y) = flower.get_position();
-                // For simplicity, assuming a direct conversion to String, adjust formatting as needed
-                let flower_text = format!("{}: {} | x: {} y: {}", name, nectar, x, y); // Include the flower's name
-                Row::new(vec![flower_text])
+                format!(
+                    "Flower: {} - Nectar: {} | Position: ({}, {})",
+                    name, nectar, x, y
+                )
             });
 
-            let flower_table = Table::new(flower_rows)
+            let bee_texts = bees.iter().map(|bee| {
+                let hunger = bee.hunger();
+                format!("Bee: Hunger - {}", hunger)
+            });
+
+            // Combine them into rows with two cells each
+            let table_rows: Vec<Row> = flower_texts
+                .zip(bee_texts)
+                .map(|(flower_info, bee_info)| {
+                    Row::new(vec![Cell::from(flower_info), Cell::from(bee_info)])
+                })
+                .collect();
+
+            // Now, create the table using these rows
+            let table = Table::new(table_rows)
                 .block(
                     Block::default()
-                        .title("Flower Nectar Counts")
+                        .title("Flowers & Bees")
                         .borders(Borders::ALL),
                 )
-                // Adjust the width or other constraints as needed for your layout
-                .widths(&[Constraint::Percentage(100)]);
+                .widths(&[
+                    Constraint::Percentage(50), // Half the table's width for flowers
+                    Constraint::Percentage(50), // Half the table's width for bees
+                ]);
 
-            // Determine where to place this in your layout, adjusting as needed
-            f.render_widget(flower_table, chunks[2]); // This should now correctly refer to the flower table's layout section
+            f.render_widget(table, chunks[2]);
 
             // Calculate the total nectar from all flowers
             let total_nectar: u32 = flowers.iter().map(|flower| flower.nectar_count()).sum();
