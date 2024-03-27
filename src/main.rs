@@ -44,9 +44,9 @@ fn update(
 ) {
     simulation_time.advance();
     terrain.update_temperature(simulation_time);
-    world::bees::Bees::move_all_bees(bees, flowers);
-
     update_flowers_nectar(flowers, terrain);
+
+    world::bees::Bees::move_all_bees(bees, flowers);
 }
 
 fn update_flowers_nectar(flowers: &mut Vec<Box<dyn Flower>>, terrain_grid: &TerrainGrid) {

@@ -22,36 +22,42 @@ impl Bees {
 
         for bee in bees.iter_mut() {
             let current_position = bee.get_position();
-
-            // Randomly move up, down, left, or right by one square unless they are on the edge
             let mut x = current_position.0;
             let mut y = current_position.1;
-            let direction = rng.gen_range(0..=3);
-            match direction {
-                0 if x > 0 => x -= 1,
-                1 if x < 9 => x += 1,
-                2 if y > 0 => y -= 1,
-                3 if y < 9 => y += 1,
-                _ => {}
-            }
 
-            // Check for a flower with nectar at the intended location
+            // Check for a flower with nectar at the current location before deciding to move
             if let Some(flower) = flowers.iter_mut().find(|f| {
                 let pos = f.get_position();
                 pos.0 == x && pos.1 == y
             }) {
                 if flower.nectar_count() > 0 && bee.hunger() > 10 {
-                    // The bee eats some nectar from the flower, reducing its hunger.
-                    // Adjust the amount of nectar taken based on your game's rules.
                     let nectar_taken = flower.give_nectar();
                     bee.eat(nectar_taken);
-                    continue; // Skip moving the bee to this new location since it's eating
+                } else {
+                    // If there's no nectar or bee isn't hungry enough, consider moving
+                    Self::move_bee(bee, &mut rng);
                 }
+            } else {
+                Self::move_bee(bee, &mut rng);
             }
-
-            // Move the bee only if it's not eating
-            bee.fly_to(x, y);
         }
+    }
+
+    fn move_bee(bee: &mut Bee, rng: &mut impl Rng) {
+        let current_position = bee.get_position();
+        let mut x = current_position.0;
+        let mut y = current_position.1;
+
+        let direction = rng.gen_range(0..=3);
+        match direction {
+            0 if x > 0 => x -= 1,
+            1 if x < 9 => x += 1,
+            2 if y > 0 => y -= 1,
+            3 if y < 9 => y += 1,
+            _ => {}
+        }
+
+        bee.fly_to(x, y);
     }
 }
 

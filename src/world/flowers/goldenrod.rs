@@ -37,9 +37,9 @@ impl Flower for Goldenrod {
     }
 
     fn give_nectar(&mut self) -> u32 {
-        if self.nectar > 0 {
-            self.nectar -= 1;
-            1
+        if self.nectar > 2 {
+            self.nectar -= 2;
+            2
         } else {
             0
         }
