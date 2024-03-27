@@ -9,9 +9,12 @@ use std::io::{self, Stdout};
 use tui::{
     backend::CrosstermBackend,
     layout::{Constraint, Direction, Layout},
-    widgets::{Block, Borders, Cell, Paragraph, Row, Table},
+    widgets::{Block, Borders, Cell, Paragraph, Row, Table, Gauge},
+    style::{Color, Style},
     Terminal,
 };
+
+
 
 use crate::simulation_time::SimulationTime;
 use crate::world::flowers::*;
@@ -45,8 +48,9 @@ impl TerminalInterface {
                 .margin(1)
                 .constraints([
                     Constraint::Length(3),      // Space for the time display
-                    Constraint::Percentage(50), // Half the remaining space for the terrain grid
-                    Constraint::Percentage(50), // Half for the flower table
+                    Constraint::Percentage(40), // Adjusted to leave space for the gauge
+                    Constraint::Percentage(40), // Adjusted for the flower table
+                    Constraint::Length(3),      // New space for the total nectar gauge
                 ])
                 .split(size);
 
@@ -76,6 +80,7 @@ impl TerminalInterface {
                     let cell_content = if let Some(flower) = flower_positions.get(&(x, y)) {
                         // Get the nectar count from the flower
                         let nectar = flower.nectar_count();
+                        let emoji = flower.flower_emoji();
 
                         // Convert nectar count to a percentage of the gauge
                         let gauge_percentage = nectar as f32 / 100.0;
@@ -87,11 +92,11 @@ impl TerminalInterface {
                         let gauge_visual = format!(
                             "[{}{}]",
                             "#".repeat(filled_length), // Filled part of the gauge
-                            "-".repeat(empty_length) // Empty part of the gauge
+                            "-".repeat(empty_length)   // Empty part of the gauge
                         );
 
                         // Append the gauge to the temperature text
-                        format!("{:.1}\n{}", tile.temperature, gauge_visual)
+                        format!("{:.1}{}\n{}", tile.temperature, emoji, gauge_visual)
                     } else {
                         // If no flower, just display the temperature
                         format!("{:.1}", tile.temperature)
@@ -131,6 +136,26 @@ impl TerminalInterface {
 
             // Determine where to place this in your layout, adjusting as needed
             f.render_widget(flower_table, chunks[2]); // This should now correctly refer to the flower table's layout section
+
+            // Calculate the total nectar from all flowers
+            let total_nectar: u32 = flowers.iter().map(|flower| flower.nectar_count()).sum();
+            let max_nectar_possible: u32 = flowers.len() as u32 * 100; // Assuming max 100 nectar per flower, adjust as needed
+
+            // Calculate the percentage of the total nectar to the maximum possible nectar
+            let total_nectar_percentage = if max_nectar_possible > 0 {
+                (total_nectar as f64 / max_nectar_possible as f64 * 100.0).round() as u16
+            } else {
+                0 // To avoid division by zero
+            };
+
+            // Create a gauge for total nectar
+            let total_nectar_gauge = Gauge::default()
+                .block(Block::default().title("Total Nectar").borders(Borders::ALL))
+                .gauge_style(Style::default().fg(Color::Yellow)) // Customize as needed
+                .percent(total_nectar_percentage);
+
+            // Render the gauge in the designated area
+            f.render_widget(total_nectar_gauge, chunks[3]); // Assuming `chunks[2]` is the intended area
         })?;
         Ok(())
     }
