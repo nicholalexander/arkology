@@ -72,25 +72,40 @@ impl TerminalInterface {
             // Adjusted rendering code with manual tracking of x and y coordinates
             let rows = terrain.tiles.iter().enumerate().map(|(y, row)| {
                 let cells = row.iter().enumerate().map(|(x, tile)| {
-                    // Check if there's a flower at this tile's position using x, y coordinates
-                    if let Some(flower) = flower_positions.get(&(x, y)) {
-                        // Now you can access anything from the flower, not just the emoji
-                        let flower_emoji = flower.flower_emoji(); // For example
-                        let tile_text = format!("{:.1} {}", tile.temperature, flower_emoji);
-                        Cell::from(tile_text)
+                    // Use the flower_positions HashMap to check if there's a flower at this tile's position
+                    let cell_content = if let Some(flower) = flower_positions.get(&(x, y)) {
+                        // Get the nectar count from the flower
+                        let nectar = flower.nectar_count();
+
+                        // Convert nectar count to a percentage of the gauge
+                        let gauge_percentage = nectar as f32 / 100.0;
+
+                        // Create a simple textual gauge. Adjust the size as necessary.
+                        let gauge_size = 10; // Total size of the gauge
+                        let filled_length = (gauge_percentage * gauge_size as f32).round() as usize;
+                        let empty_length = gauge_size - filled_length;
+                        let gauge_visual = format!(
+                            "[{}{}]",
+                            "#".repeat(filled_length), // Filled part of the gauge
+                            "-".repeat(empty_length) // Empty part of the gauge
+                        );
+
+                        // Append the gauge to the temperature text
+                        format!("{:.1}\n{}", tile.temperature, gauge_visual)
                     } else {
-                        // No flower at this position, just show the temperature
-                        let tile_text = format!("{:.1}", tile.temperature);
-                        Cell::from(tile_text)
-                    }
+                        // If no flower, just display the temperature
+                        format!("{:.1}", tile.temperature)
+                    };
+
+                    Cell::from(cell_content)
                 });
                 // Here we set the height of each row to 2
-                Row::new(cells).height(2).bottom_margin(0) // Adjust bottom margin as needed
+                Row::new(cells).height(2).bottom_margin(0)
             });
 
             let table = Table::new(rows)
                 .block(Block::default().title("Terrain Grid").borders(Borders::ALL))
-                .widths(&[Constraint::Percentage(10); 10]); // Adjust widths as needed
+                .widths(&[Constraint::Percentage(10); 10]);
 
             // Assuming `f.render_widget` is part of your UI rendering logic
             f.render_widget(table, chunks[1]);
