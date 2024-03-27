@@ -6,6 +6,10 @@ pub trait Flower {
     fn nectar_count(&self) -> u32;
     fn name(&self) -> &str;
     fn get_position(&self) -> (usize, usize);
+
+    fn flower_emoji(&self) -> &str {
+        "🌼"
+    }
 }
 
 pub struct Flowers;

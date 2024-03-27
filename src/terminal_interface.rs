@@ -3,11 +3,13 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
+use std::collections::HashMap;
 use std::io::{self, Stdout};
+
 use tui::{
     backend::CrosstermBackend,
     layout::{Constraint, Direction, Layout},
-    widgets::{Block, Borders, Paragraph, Row, Table},
+    widgets::{Block, Borders, Cell, Paragraph, Row, Table},
     Terminal,
 };
 
@@ -61,18 +63,30 @@ impl TerminalInterface {
             f.render_widget(time_paragraph, chunks[0]);
 
             // Render terrain grid
-            let rows = terrain.tiles.iter().map(|row: &Vec<TerrainTile>| {
-                let row_text: Vec<String> = row
-                    .iter()
-                    .map(|tile| format!("{:.1}", tile.temperature))
-                    .collect();
-                Row::new(row_text)
+            let flower_positions: HashMap<(usize, usize), &str> = flowers
+                .iter()
+                .map(|flower| (flower.get_position(), flower.flower_emoji()))
+                .collect();
+
+            // Adjusted rendering code with manual tracking of x and y coordinates
+            let rows = terrain.tiles.iter().enumerate().map(|(y, row)| {
+                let cells = row.iter().enumerate().map(|(x, tile)| {
+                    // Lookup if there's a flower at this tile's position using x, y coordinates
+                    let flower_emoji = flower_positions.get(&(x, y)).unwrap_or(&"");
+                    // Append flower emoji to tile text if present
+                    let tile_text = format!("{:.1}{}", tile.temperature, flower_emoji);
+
+                    Cell::from(tile_text)
+                });
+                // Here we set the height of each row to 2
+                Row::new(cells).height(2).bottom_margin(0) // Adjust bottom margin as needed
             });
 
             let table = Table::new(rows)
                 .block(Block::default().title("Terrain Grid").borders(Borders::ALL))
-                .widths(&[Constraint::Percentage(10); 10]); // Assuming a fixed-size grid for simplicity
+                .widths(&[Constraint::Percentage(10); 10]); // Adjust widths as needed
 
+            // Assuming `f.render_widget` is part of your UI rendering logic
             f.render_widget(table, chunks[1]);
 
             // Assuming you're inside a rendering function or method
