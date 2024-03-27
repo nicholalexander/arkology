@@ -63,20 +63,26 @@ impl TerminalInterface {
             f.render_widget(time_paragraph, chunks[0]);
 
             // Render terrain grid
-            let flower_positions: HashMap<(usize, usize), &str> = flowers
+            // Create a HashMap from flower positions to references to the flowers
+            let flower_positions: HashMap<(usize, usize), &Box<dyn Flower>> = flowers
                 .iter()
-                .map(|flower| (flower.get_position(), flower.flower_emoji()))
+                .map(|flower| ((flower.get_position(), flower)))
                 .collect();
 
             // Adjusted rendering code with manual tracking of x and y coordinates
             let rows = terrain.tiles.iter().enumerate().map(|(y, row)| {
                 let cells = row.iter().enumerate().map(|(x, tile)| {
-                    // Lookup if there's a flower at this tile's position using x, y coordinates
-                    let flower_emoji = flower_positions.get(&(x, y)).unwrap_or(&"");
-                    // Append flower emoji to tile text if present
-                    let tile_text = format!("{:.1}{}", tile.temperature, flower_emoji);
-
-                    Cell::from(tile_text)
+                    // Check if there's a flower at this tile's position using x, y coordinates
+                    if let Some(flower) = flower_positions.get(&(x, y)) {
+                        // Now you can access anything from the flower, not just the emoji
+                        let flower_emoji = flower.flower_emoji(); // For example
+                        let tile_text = format!("{:.1} {}", tile.temperature, flower_emoji);
+                        Cell::from(tile_text)
+                    } else {
+                        // No flower at this position, just show the temperature
+                        let tile_text = format!("{:.1}", tile.temperature);
+                        Cell::from(tile_text)
+                    }
                 });
                 // Here we set the height of each row to 2
                 Row::new(cells).height(2).bottom_margin(0) // Adjust bottom margin as needed
