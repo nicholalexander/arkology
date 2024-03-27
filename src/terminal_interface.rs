@@ -9,14 +9,13 @@ use std::io::{self, Stdout};
 use tui::{
     backend::CrosstermBackend,
     layout::{Constraint, Direction, Layout},
-    widgets::{Block, Borders, Cell, Paragraph, Row, Table, Gauge},
     style::{Color, Style},
+    widgets::{Block, Borders, Cell, Gauge, Paragraph, Row, Table},
     Terminal,
 };
 
-
-
 use crate::simulation_time::SimulationTime;
+use crate::world::bees::*;
 use crate::world::flowers::*;
 use crate::world::terrain::{TerrainGrid, TerrainTile};
 
@@ -39,6 +38,7 @@ impl TerminalInterface {
         terrain: &TerrainGrid,
         simulation_time: &SimulationTime,
         flowers: &Vec<Box<dyn Flower>>,
+        bees: &Vec<Bee>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         self.terminal.draw(|f| {
             let size = f.size();
@@ -73,11 +73,16 @@ impl TerminalInterface {
                 .map(|flower| ((flower.get_position(), flower)))
                 .collect();
 
+            let bee_positions: HashMap<(usize, usize), &Bee> =
+                bees.iter().map(|bee| ((bee.get_position(), bee))).collect();
+
             // Adjusted rendering code with manual tracking of x and y coordinates
             let rows = terrain.tiles.iter().enumerate().map(|(y, row)| {
                 let cells = row.iter().enumerate().map(|(x, tile)| {
                     // Use the flower_positions HashMap to check if there's a flower at this tile's position
-                    let cell_content = if let Some(flower) = flower_positions.get(&(x, y)) {
+                    let tile_and_flower_content = if let Some(flower) =
+                        flower_positions.get(&(x, y))
+                    {
                         // Get the nectar count from the flower
                         let nectar = flower.nectar_count();
                         let emoji = flower.flower_emoji();
@@ -102,7 +107,15 @@ impl TerminalInterface {
                         format!("{:.1}", tile.temperature)
                     };
 
-                    Cell::from(cell_content)
+                    let bee_content = if let Some(bee) = bee_positions.get(&(x, y)) {
+                        format!("{}", bee.emoji())
+                    } else {
+                        format!(" ")
+                    };
+
+                    let combined_content = format!("{} {}", tile_and_flower_content, bee_content);
+
+                    Cell::from(combined_content)
                 });
                 // Here we set the height of each row to 2
                 Row::new(cells).height(2).bottom_margin(0)

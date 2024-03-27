@@ -6,6 +6,7 @@ use crate::world::terrain::TerrainGrid; // If you need to access TerrainGrid dir
 use crossterm::event::{self, Event, KeyCode};
 use simulation_time::SimulationTime;
 use terminal_interface::TerminalInterface;
+use world::bees::*;
 use world::flowers::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -13,10 +14,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut simulation_time = SimulationTime::new();
     let mut terminal_interface = TerminalInterface::new()?;
     let mut flowers = Flowers::build();
+    let mut bees = Bees::build();
 
     loop {
-        update(&mut terrain, &mut simulation_time, &mut flowers);
-        terminal_interface.render(&terrain, &simulation_time, &flowers)?;
+        update(&mut terrain, &mut simulation_time, &mut flowers, &mut bees);
+        terminal_interface.render(&terrain, &simulation_time, &flowers, &mut bees)?;
 
         if event::poll(std::time::Duration::from_millis(100))? {
             if let Event::Key(key_event) = event::read()? {
@@ -38,6 +40,7 @@ fn update(
     terrain: &mut TerrainGrid,
     simulation_time: &mut SimulationTime,
     flowers: &mut Vec<Box<dyn Flower>>,
+    bees: &mut Vec<Bee>,
 ) {
     simulation_time.advance();
     terrain.update_temperature(simulation_time);
