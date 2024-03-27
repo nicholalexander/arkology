@@ -31,4 +31,8 @@ impl Flower for Goldenrod {
     fn get_position(&self) -> (usize, usize) {
         (self.x, self.y)
     }
+
+    fn flower_emoji(&self) -> &str {
+        "🪻"
+    }
 }

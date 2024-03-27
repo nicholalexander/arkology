@@ -48,8 +48,8 @@ impl TerminalInterface {
                 .margin(1)
                 .constraints([
                     Constraint::Length(3),      // Space for the time display
-                    Constraint::Percentage(40), // Adjusted to leave space for the gauge
-                    Constraint::Percentage(40), // Adjusted for the flower table
+                    Constraint::Percentage(50), // Adjusted to leave space for the gauge
+                    Constraint::Percentage(30), // Adjusted for the flower table
                     Constraint::Length(3),      // New space for the total nectar gauge
                 ])
                 .split(size);
