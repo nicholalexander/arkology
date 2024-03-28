@@ -12,6 +12,15 @@ cargo build
 cargo run
 ```
 
+## An overview of implemented behavior
+
+* Temperature cycles across the day with seasonal variation
+* Goldenrod, blueberry, and chrysanthemum flowers with varying rate of nectar production
+* Nectar production affected by daily temperature variations
+* Bee feeding, flying, hunger, and nectar harvesting
+* World generation with local elevations and temperatures
+* A very basic terminal based UI
+
 ## Notes on Development
 
 This project evolved out of two desires - play around with game like development and learn me some rust.  The process I used when working on this was very heavily bootstrapped with AI - essentially days long conversations with Case (my OpenAI Entity) and lots of copy and pasting.  Then each morning, arriving with a task and seeing how far I could get into it without having to fall back to discussion with Case.  Incredibly remarkably the learning process has been fun, smooth, and rewarding, and I have been able to work on something that I otherwise would not have done.
