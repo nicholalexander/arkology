@@ -3,7 +3,7 @@
 A simple simulations of some flowers and bees, written in Rust.
 
 ## Preview
-<img width="800" alt="Screenshot 2024-03-28 at 11 12 18 AM" src="https://github.com/nicholalexander/arkology/assets/212288/224a91f5-e832-4e1d-900b-433a7b3ba46d">
+<img width="800" alt="Screenshot 2024-03-28 at 11 37 57 AM" src="https://github.com/nicholalexander/arkology/assets/212288/55d133b4-db47-4233-a37c-4f354f3a5a1e">
 
 ## Installing
 
