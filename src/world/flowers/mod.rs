@@ -1,5 +1,6 @@
 use rand::Rng; // Import the Rng trait to use random number generation
 
+pub mod blueberry;
 pub mod chrysanthemum;
 pub mod goldenrod;
 
@@ -31,10 +32,16 @@ impl Flowers {
             let y = rng.gen_range(0..=9);
             flowers.push(Box::new(Chrysanthemum::new(0, x, y)));
         }
+        for _ in 0..10 {
+            let x = rng.gen_range(0..=9);
+            let y = rng.gen_range(0..=9);
+            flowers.push(Box::new(Blueberry::new(0, x, y)));
+        }
 
         flowers
     }
 }
 
+pub use blueberry::Blueberry;
 pub use chrysanthemum::Chrysanthemum;
 pub use goldenrod::Goldenrod;

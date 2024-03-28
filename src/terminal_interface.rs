@@ -17,7 +17,7 @@ use tui::{
 use crate::simulation_time::SimulationTime;
 use crate::world::bees::*;
 use crate::world::flowers::*;
-use crate::world::terrain::{TerrainGrid, TerrainTile};
+use crate::world::terrain::TerrainGrid;
 
 pub struct TerminalInterface {
     terminal: Terminal<CrosstermBackend<Stdout>>,

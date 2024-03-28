@@ -22,8 +22,8 @@ impl Bees {
 
         for bee in bees.iter_mut() {
             let current_position = bee.get_position();
-            let mut x = current_position.0;
-            let mut y = current_position.1;
+            let x = current_position.0;
+            let y = current_position.1;
 
             // Check for a flower with nectar at the current location before deciding to move
             if let Some(flower) = flowers.iter_mut().find(|f| {
