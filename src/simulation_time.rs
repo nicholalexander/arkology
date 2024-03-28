@@ -1,58 +1,12 @@
-pub enum Month {
-    January,
-    February,
-    March,
-    April,
-    May,
-    June,
-    July,
-    August,
-    September,
-    October,
-    November,
-    December,
-}
-
 use std::f32::consts::PI;
-
-// Define the Season enum for clarity in seasonal calculations
-enum Season {
-    Winter,
-    Spring,
-    Summer,
-    Autumn,
-}
-
 use std::fmt;
 
-// Implementing the Display trait for the Month enum
-impl fmt::Display for Month {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                Month::January => "January",
-                Month::February => "February",
-                Month::March => "March",
-                Month::April => "April",
-                Month::May => "May",
-                Month::June => "June",
-                Month::July => "July",
-                Month::August => "August",
-                Month::September => "September",
-                Month::October => "October",
-                Month::November => "November",
-                Month::December => "December",
-            }
-        )
-    }
-}
 pub struct SimulationTime {
-    pub hour: u32,    // Representing the hour of the day
-    pub day: u32,     // Representing the day of the year
-    pub month: Month, // Current month
-    pub year: u32,    // Current year
+    pub hour: u32,
+    pub day: u32,
+    pub month: Month,
+    pub year: u32,
+    pub season: Season,
 }
 
 impl SimulationTime {
@@ -62,6 +16,7 @@ impl SimulationTime {
             day: 1,
             month: Month::March,
             year: 10191,
+            season: Season::Spring,
         }
     }
 
@@ -86,7 +41,8 @@ impl SimulationTime {
                 | Month::December
                     if self.day > 31 =>
                 {
-                    self.advance_month()
+                    self.advance_month();
+                    self.advance_season();
                 }
                 _ => {}
             }
@@ -111,6 +67,15 @@ impl SimulationTime {
                 self.year += 1; // Advance year
                 Month::January
             }
+        };
+    }
+
+    fn advance_season(&mut self) {
+        self.season = match self.season {
+            Season::Winter => Season::Spring,
+            Season::Spring => Season::Summer,
+            Season::Summer => Season::Autumn,
+            Season::Autumn => Season::Winter,
         };
     }
 
@@ -158,5 +123,66 @@ impl SimulationTime {
             Season::Summer => (15.0, 20.0, 10.0), // Higher amplitude for larger temperature swings, warmer baseline, significant midday peak
             Season::Autumn => (10.0, 15.0, 5.0), // Decreasing amplitude and baseline with moderate midday peak
         }
+    }
+}
+
+pub enum Month {
+    January,
+    February,
+    March,
+    April,
+    May,
+    June,
+    July,
+    August,
+    September,
+    October,
+    November,
+    December,
+}
+
+// Implementing the Display trait for the Month enum
+impl fmt::Display for Month {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Month::January => "January",
+                Month::February => "February",
+                Month::March => "March",
+                Month::April => "April",
+                Month::May => "May",
+                Month::June => "June",
+                Month::July => "July",
+                Month::August => "August",
+                Month::September => "September",
+                Month::October => "October",
+                Month::November => "November",
+                Month::December => "December",
+            }
+        )
+    }
+}
+
+pub enum Season {
+    Winter,
+    Spring,
+    Summer,
+    Autumn,
+}
+
+impl fmt::Display for Season {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Season::Winter => "Winter",
+                Season::Spring => "Spring",
+                Season::Summer => "Summer",
+                Season::Autumn => "Autumn",
+            }
+        )
     }
 }
