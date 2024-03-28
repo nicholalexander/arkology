@@ -1,16 +1,22 @@
 use uuid::Uuid;
 
+pub enum BeeStatus {
+    Living,
+    Dead,
+}
 pub struct Bee {
     hunger: u32,
     x: usize,
     y: usize,
     uuid: String,
+    status: BeeStatus,
 }
 
 impl Bee {
     pub fn new(hunger: u32, x: usize, y: usize) -> Self {
         let uuid = Uuid::new_v4().to_string();
-        Self { hunger, x, y, uuid }
+        let status = BeeStatus::Living;
+        Self { hunger, x, y, uuid, status }
     }
 
     pub fn get_position(&self) -> (usize, usize) {
@@ -19,6 +25,13 @@ impl Bee {
 
     pub fn get_uuid(&self) -> String {
         self.uuid.clone()
+    }
+
+    pub fn get_status(&self) -> String {
+        match self.status {
+            BeeStatus::Living => "Living".to_string(),
+            BeeStatus::Dead => "Dead".to_string(),
+        }
     }
 
     pub fn eat(&mut self, nectar_taken: u32) {
