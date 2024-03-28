@@ -1,16 +1,24 @@
+use uuid::Uuid;
+
 pub struct Bee {
     hunger: u32,
     x: usize,
     y: usize,
+    uuid: String,
 }
 
 impl Bee {
     pub fn new(hunger: u32, x: usize, y: usize) -> Self {
-        Self { hunger, x, y }
+        let uuid = Uuid::new_v4().to_string();
+        Self { hunger, x, y, uuid }
     }
 
     pub fn get_position(&self) -> (usize, usize) {
         (self.x, self.y)
+    }
+
+    pub fn get_uuid(&self) -> String {
+        self.uuid.clone()
     }
 
     pub fn eat(&mut self, nectar_taken: u32) {
@@ -41,6 +49,7 @@ mod tests {
         let bee = Bee::new(10, 5, 5);
         assert_eq!(bee.hunger(), 10);
         assert_eq!(bee.get_position(), (5, 5));
+        assert_eq!(bee.get_uuid().len(), 36);
     }
 
     #[test]

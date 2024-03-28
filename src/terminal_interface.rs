@@ -143,7 +143,8 @@ impl TerminalInterface {
 
             let bee_texts = bees.iter().map(|bee| {
                 let hunger = bee.hunger();
-                format!("Bee: Hunger - {}", hunger)
+                let uuid = bee.get_uuid();
+                format!("Bee: {} | Hunger - {}", uuid, hunger)
             });
 
             // Combine them into rows with two cells each
