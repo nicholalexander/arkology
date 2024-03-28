@@ -14,11 +14,7 @@ impl Blueberry {
 }
 
 impl Flower for Blueberry {
-    fn update_nectar(&mut self, temperature: f32) {
-        if temperature > 25.0 && self.nectar < 100 {
-            self.nectar += 1;
-        }
-    }
+    fn update_nectar(&mut self, _temperature: f32) {}
 
     fn nectar_count(&self) -> u32 {
         self.nectar
