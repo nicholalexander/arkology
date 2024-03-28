@@ -20,7 +20,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         update(&mut terrain, &mut simulation_time, &mut flowers, &mut bees);
         terminal_interface.render(&terrain, &simulation_time, &flowers, &mut bees)?;
 
-        if event::poll(std::time::Duration::from_millis(100))? {
+        if event::poll(std::time::Duration::from_millis(1))? {
             if let Event::Key(key_event) = event::read()? {
                 if key_event.code == KeyCode::Char('c')
                     && key_event
@@ -47,6 +47,7 @@ fn update(
     update_flowers_nectar(flowers, terrain);
 
     world::bees::Bees::move_all_bees(bees, flowers);
+    world::bees::Bees::sweep_dead_bees(bees);
 }
 
 fn update_flowers_nectar(flowers: &mut Vec<Box<dyn Flower>>, terrain_grid: &TerrainGrid) {

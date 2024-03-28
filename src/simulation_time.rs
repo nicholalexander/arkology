@@ -1,5 +1,6 @@
 use std::f32::consts::PI;
 use std::fmt;
+use std::cmp::PartialEq;
 
 pub struct SimulationTime {
     pub hour: u32,
@@ -30,7 +31,7 @@ impl SimulationTime {
                 Month::April | Month::June | Month::September | Month::November
                     if self.day > 30 =>
                 {
-                    self.advance_month()
+                    self.advance_month();
                 }
                 Month::January
                 | Month::March
@@ -42,7 +43,6 @@ impl SimulationTime {
                     if self.day > 31 =>
                 {
                     self.advance_month();
-                    self.advance_season();
                 }
                 _ => {}
             }
@@ -68,6 +68,14 @@ impl SimulationTime {
                 Month::January
             }
         };
+
+        match self.month {
+            Month::March => self.season = Season::Spring,
+            Month::June => self.season = Season::Summer,
+            Month::September => self.season = Season::Autumn,
+            Month::December => self.season = Season::Winter,
+            _ => {} // No change in season for other months
+        }
     }
 
     fn advance_season(&mut self) {
@@ -165,12 +173,19 @@ impl fmt::Display for Month {
     }
 }
 
+#[derive(Debug, PartialEq)]
 pub enum Season {
     Winter,
     Spring,
     Summer,
     Autumn,
 }
+
+// impl PartialEq<Self> for Season {
+//     fn eq(&self, other: &Self) -> bool {
+//         std::mem::discriminant(self) == std::mem::discriminant(other)
+//     }
+// }
 
 impl fmt::Display for Season {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

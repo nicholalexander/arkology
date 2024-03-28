@@ -32,9 +32,12 @@ impl Bees {
             }) {
                 if flower.nectar_count() > 0 && bee.hunger() > 10 {
                     let nectar_taken = flower.give_nectar();
-                    bee.eat(nectar_taken);
+                    if nectar_taken > 0 {
+                        bee.eat(nectar_taken);
+                    } else {
+                        Self::move_bee(bee, &mut rng);
+                    }
                 } else {
-                    // If there's no nectar or bee isn't hungry enough, consider moving
                     Self::move_bee(bee, &mut rng);
                 }
             } else {
@@ -58,6 +61,10 @@ impl Bees {
         }
 
         bee.fly_to(x, y);
+    }
+
+    pub fn sweep_dead_bees(bees: &mut Vec<Bee>) {
+        bees.retain(|bee| bee.get_status() == "Living");
     }
 }
 

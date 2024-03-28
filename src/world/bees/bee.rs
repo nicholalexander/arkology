@@ -42,6 +42,9 @@ impl Bee {
         self.x = x;
         self.y = y;
         self.hunger += 1;
+        if self.hunger > 100 {
+            self.status = BeeStatus::Dead;
+        }
     }
 
     pub fn hunger(&self) -> u32 {
@@ -78,6 +81,13 @@ mod tests {
         bee.fly_to(6, 6);
         assert_eq!(bee.hunger(), 11);
         assert_eq!(bee.get_position(), (6, 6));
+    }
+
+    #[test]
+    fn bee_with_hunger_over_100_dies(){
+        let mut bee = Bee::new(100, 5, 5);
+        bee.fly_to(6, 6);
+        assert_eq!(bee.get_status(), "Dead");
     }
 
     #[test]
