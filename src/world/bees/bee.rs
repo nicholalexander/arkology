@@ -1,4 +1,5 @@
 use uuid::Uuid;
+use rand::Rng;
 
 pub enum BeeStatus {
     Living,
@@ -11,18 +12,22 @@ pub struct Bee {
     y: usize,
     uuid: String,
     status: BeeStatus,
+    age: u32,
 }
 
 impl Bee {
     pub fn new(hunger: u32, x: usize, y: usize) -> Self {
         let uuid = Uuid::new_v4().to_string();
         let status = BeeStatus::Living;
+        let age = 0;
+
         Self {
             hunger,
             x,
             y,
             uuid,
             status,
+            age
         }
     }
 
@@ -70,6 +75,38 @@ impl Bee {
     pub fn wake_up(&mut self) {
         self.status = BeeStatus::Living;
     }
+
+    pub fn get_age(&self) -> u32 {
+        self.age
+    }
+
+    pub fn increment_age(&mut self) {
+        let mut rng = rand::thread_rng();
+
+        self.age += 1;
+
+        let death_chance = Self::calculate_death_chance(self.age);
+
+        if rng.gen_bool(death_chance) {
+            self.die();
+        }
+    }
+
+
+    pub fn die(&mut self) {
+        self.status = BeeStatus::Dead;
+    }
+
+    pub fn calculate_death_chance(age_in_hours: u32) -> f64 {
+        let age_in_days = age_in_hours as f64 / 24.0;
+
+        // Example: Start with a base death chance and increase it as the bee gets older
+        let base_death_chance = 0.001; // 1% daily death chance
+        let additional_risk = (age_in_days / 45.0) * 0.01; // Increase risk after 45 days
+
+        (base_death_chance + additional_risk).min(0.1) // Cap the death chance to a maximum of 10%
+    }
+
 }
 
 #[cfg(test)]

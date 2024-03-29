@@ -147,10 +147,11 @@ impl TerminalInterface {
                 let uuid = bee.get_uuid();
                 let short_uuid = &uuid[..8]; // Display only the first 8 characters of the UUID
                 let status = bee.get_status();
+                let age = bee.get_age();
 
                 format!(
-                    "Bee: {} | Hunger: {} Status: {}",
-                    short_uuid, hunger, status
+                    "Bee: {} | Hunger: {} | Status: {} | Age: {}",
+                    short_uuid, hunger, status, age
                 )
             });
 

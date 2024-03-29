@@ -119,6 +119,13 @@ impl Bees {
             }
         }
     }
+
+    pub fn increment_age(bees: &mut Vec<Bee>) {
+        for bee in bees.iter_mut() {
+            bee.increment_age();
+        }
+    }
 }
+
 
 pub use bee::Bee;

@@ -52,6 +52,7 @@ fn update(
 
     let month = &simulation_time.month;
     world::bees::Bees::sleeping_state(bees, month);
+    world::bees::Bees::increment_age(bees);
 }
 
 fn update_flowers_nectar(flowers: &mut Vec<Box<dyn Flower>>, terrain_grid: &TerrainGrid) {
