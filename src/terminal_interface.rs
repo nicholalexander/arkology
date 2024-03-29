@@ -144,10 +144,11 @@ impl TerminalInterface {
 
             let bee_texts = bees.iter().map(|bee| {
                 let hunger = bee.hunger();
-                let uuid = &bee.get_uuid()[..6];
+                let uuid = bee.get_uuid();
+                let short_uuid = &uuid[..8]; // Display only the first 8 characters of the UUID
                 let status = bee.get_status();
 
-                format!("Bee: {} | Hunger: {} Status: {}", uuid, hunger, status)
+                format!("Bee: {} | Hunger: {} Status: {}", short_uuid, hunger, status)
             });
 
             // Combine them into rows with two cells each
