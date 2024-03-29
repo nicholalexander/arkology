@@ -1,5 +1,6 @@
 use crate::world::flowers::Flower;
 use rand::Rng;
+use crate::simulation_time;
 
 pub mod bee;
 
@@ -87,6 +88,26 @@ impl Bees {
 
     pub fn sweep_dead_bees(bees: &mut Vec<Bee>) {
         bees.retain(|bee| bee.get_status() == "Living");
+    }
+
+    pub fn sleeping_state(bees: &mut Vec<Bee>, month: ::world::simulation_time::Month, x: usize, y: usize) {
+        match month {
+            match month {
+                Month::November | Month::December | Month::January | Month::February => {
+                    for bee in bees.iter_mut() {
+                        let (bee_x, bee_y) = bee.get_position();
+                        if bee_x == x && bee_y == y {
+                            bee.sleep();
+                        }
+                    }
+                }
+            }
+            _ => {
+                for bee in bees.iter_mut() {
+                    bee.wake_up();
+                }
+            }
+        }
     }
 
 }
