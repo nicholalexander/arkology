@@ -22,19 +22,19 @@ impl Flowers {
         let mut rng = rand::thread_rng();
         let mut flowers: Vec<Box<dyn Flower>> = Vec::new();
         for _ in 0..50 {
-            let x = rng.gen_range(0..=1000);
-            let y = rng.gen_range(0..=1000);
+            let x = rng.gen_range(0..=10);
+            let y = rng.gen_range(0..=10);
             flowers.push(Box::new(Goldenrod::new(0, x, y)));
         }
 
         for _ in 0..20 {
-            let x = rng.gen_range(0..=1000);
-            let y = rng.gen_range(0..=1000);
+            let x = rng.gen_range(0..=10);
+            let y = rng.gen_range(0..=10);
             flowers.push(Box::new(Chrysanthemum::new(0, x, y)));
         }
         for _ in 0..10 {
-            let x = rng.gen_range(0..=1000);
-            let y = rng.gen_range(0..=1000);
+            let x = rng.gen_range(0..=10);
+            let y = rng.gen_range(0..=10);
             flowers.push(Box::new(Blueberry::new(0, x, y)));
         }
 

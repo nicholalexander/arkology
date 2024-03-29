@@ -11,7 +11,7 @@ use world::bees::*;
 use world::flowers::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut terrain = TerrainGrid::new(1000, 1000);
+    let mut terrain = TerrainGrid::new(10, 10);
     let mut simulation_time = SimulationTime::new();
     let mut terminal_interface = TerminalInterface::new()?;
     let mut flowers = Flowers::build();
