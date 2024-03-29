@@ -12,7 +12,7 @@ cargo build
 cargo run
 ```
 
-## An overview of implemented behavior
+## An overview of roughly implemented behavior
 
 * Temperature cycles across the day with seasonal variation
 * Goldenrod, blueberry, and chrysanthemum flowers with varying rate of nectar production
@@ -20,6 +20,8 @@ cargo run
 * Bee feeding, flying, hunger, and nectar harvesting
 * World generation with local elevations and temperatures
 * A very basic terminal based UI
+* Bee ageing, reproduction, and death
+* Statuses of Sleeping, Living, and Dead
 
 ## Notes on Development
 
