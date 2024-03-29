@@ -3,6 +3,7 @@ use uuid::Uuid;
 pub enum BeeStatus {
     Living,
     Dead,
+    Sleeping,
 }
 pub struct Bee {
     hunger: u32,
@@ -54,6 +55,15 @@ impl Bee {
     pub fn emoji(&self) -> char {
         '🐝'
     }
+
+    pub fn sleep(&mut self) {
+        self.status = BeeStatus::Sleeping;
+    }
+
+    pub fn wake_up(&mut self) {
+        self.status = BeeStatus::Living;
+    }
+
 }
 
 #[cfg(test)]
