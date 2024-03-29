@@ -21,13 +21,13 @@ impl Flowers {
     pub fn build() -> Vec<Box<dyn Flower>> {
         let mut rng = rand::thread_rng();
         let mut flowers: Vec<Box<dyn Flower>> = Vec::new();
-        for _ in 0..20 {
+        for _ in 0..50 {
             let x = rng.gen_range(0..=9);
             let y = rng.gen_range(0..=9);
             flowers.push(Box::new(Goldenrod::new(0, x, y)));
         }
 
-        for _ in 0..10 {
+        for _ in 0..20 {
             let x = rng.gen_range(0..=9);
             let y = rng.gen_range(0..=9);
             flowers.push(Box::new(Chrysanthemum::new(0, x, y)));
