@@ -1,4 +1,5 @@
 mod simulation_time;
+pub use simulation_time::{Month, Season};
 mod terminal_interface;
 mod world;
 
@@ -10,7 +11,7 @@ use world::bees::*;
 use world::flowers::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut terrain = TerrainGrid::new(10, 10);
+    let mut terrain = TerrainGrid::new(1000, 1000);
     let mut simulation_time = SimulationTime::new();
     let mut terminal_interface = TerminalInterface::new()?;
     let mut flowers = Flowers::build();
@@ -20,7 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         update(&mut terrain, &mut simulation_time, &mut flowers, &mut bees);
         terminal_interface.render(&terrain, &simulation_time, &flowers, &mut bees)?;
 
-        if event::poll(std::time::Duration::from_millis(10))? {
+        if event::poll(std::time::Duration::from_millis(1))? {
             if let Event::Key(key_event) = event::read()? {
                 if key_event.code == KeyCode::Char('c')
                     && key_event
@@ -48,6 +49,9 @@ fn update(
 
     world::bees::Bees::move_all_bees(bees, flowers);
     world::bees::Bees::sweep_dead_bees(bees);
+
+    let month = &simulation_time.month;
+    world::bees::Bees::sleeping_state(bees, month);
 }
 
 fn update_flowers_nectar(flowers: &mut Vec<Box<dyn Flower>>, terrain_grid: &TerrainGrid) {

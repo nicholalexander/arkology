@@ -17,7 +17,13 @@ impl Bee {
     pub fn new(hunger: u32, x: usize, y: usize) -> Self {
         let uuid = Uuid::new_v4().to_string();
         let status = BeeStatus::Living;
-        Self { hunger, x, y, uuid, status }
+        Self {
+            hunger,
+            x,
+            y,
+            uuid,
+            status,
+        }
     }
 
     pub fn get_position(&self) -> (usize, usize) {
@@ -32,6 +38,7 @@ impl Bee {
         match self.status {
             BeeStatus::Living => "Living".to_string(),
             BeeStatus::Dead => "Dead".to_string(),
+            BeeStatus::Sleeping => "Sleeping".to_string(),
         }
     }
 
@@ -63,7 +70,6 @@ impl Bee {
     pub fn wake_up(&mut self) {
         self.status = BeeStatus::Living;
     }
-
 }
 
 #[cfg(test)]
@@ -94,7 +100,7 @@ mod tests {
     }
 
     #[test]
-    fn bee_with_hunger_over_100_dies(){
+    fn bee_with_hunger_over_100_dies() {
         let mut bee = Bee::new(100, 5, 5);
         bee.fly_to(6, 6);
         assert_eq!(bee.get_status(), "Dead");

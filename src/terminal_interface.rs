@@ -148,7 +148,10 @@ impl TerminalInterface {
                 let short_uuid = &uuid[..8]; // Display only the first 8 characters of the UUID
                 let status = bee.get_status();
 
-                format!("Bee: {} | Hunger: {} Status: {}", short_uuid, hunger, status)
+                format!(
+                    "Bee: {} | Hunger: {} Status: {}",
+                    short_uuid, hunger, status
+                )
             });
 
             // Combine them into rows with two cells each
