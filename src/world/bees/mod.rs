@@ -44,6 +44,28 @@ impl Bees {
                 Self::move_bee(bee, &mut rng);
             }
         }
+
+        let mut new_bees = Vec::new();
+
+        for bee in bees.iter() {
+            let current_position = bee.get_position();
+            let x = current_position.0;
+            let y = current_position.1;
+
+            if bees.iter().any(|b| {
+                let pos = b.get_position();
+                b.get_uuid() != bee.get_uuid()
+                    && pos.0 == x
+                    && pos.1 == y
+                    && b.hunger() > 20 && bee.hunger() < 30
+            }) {
+                // Note: We are not directly mutating `bees` here.
+                new_bees.push(Bee::new(60, x, y));
+            }
+        }
+
+        // Now, add the newly spawned bees to the main collection
+        bees.extend(new_bees);
     }
 
     fn move_bee(bee: &mut Bee, rng: &mut impl Rng) {
@@ -66,6 +88,7 @@ impl Bees {
     pub fn sweep_dead_bees(bees: &mut Vec<Bee>) {
         bees.retain(|bee| bee.get_status() == "Living");
     }
+
 }
 
 pub use bee::Bee;

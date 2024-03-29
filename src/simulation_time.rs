@@ -1,6 +1,6 @@
+use std::cmp::PartialEq;
 use std::f32::consts::PI;
 use std::fmt;
-use std::cmp::PartialEq;
 
 pub struct SimulationTime {
     pub hour: u32,
